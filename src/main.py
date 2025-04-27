@@ -1,46 +1,72 @@
+#%%
+# Download corpus
+
 import pyterrier as pt
-import torch
-
-
-
-"""
-from transformers import RobertaTokenizer, RobertaModel
-tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-model = RobertaModel.from_pretrained('roberta-base')
-text = "def sqrt(x): return x**0.5"
-encoded_input = tokenizer(text, return_tensors='pt')
-output = model(**encoded_input,output_hidden_states=True)
-
-
-
-text1 = "def sqrt(x): return x**0.5"
-
-encoded_input1 = tokenizer(text1, return_tensors='pt')
-output1 = model(**encoded_input1,output_hidden_states=True)
-1==1
-
-vec1=output.last_hidden_state[0][0]
-vec2=output1.last_hidden_state[0][0]
-
-res = (vec1 - vec2).pow(2).sum().sqrt()
-res1 = torch.dot(vec1,vec2)
-"""
 
 def download_dataset():
-    pt.init()
+    if not pt.java.started():
+        pt.java.init()
     dataset = pt.get_dataset('irds:codesearchnet')
 
     return list(map(lambda x: x["code"], dataset.get_corpus_iter()))
 
 corpus = download_dataset()
-#corpus = ["123", "adjsh"]
+#%%
+# Set up the tokenizer
+from transformers import RobertaTokenizer, RobertaTokenizerFast
 
-from transformers import RobertaTokenizer, RobertaModel
-tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+tokenizer = RobertaTokenizerFast.from_pretrained('roberta-base', use_fast=True)
+
+def tokenizer_func(data):
+    return tokenizer(data["code"], padding="max_length", truncation=True)
+
+# Set up dataset and create tokens
+
+from datasets import Dataset
+
+dataset = Dataset.from_dict({"code": corpus})
+
+tokenized_dataset = dataset.map(tokenizer_func, batched=True, num_proc=6)
+
+tokenized_dataset.to_json("tokens.json")
+#%%
+# Set up model and load tokens
+import torch
+from torch.utils.data import DataLoader
+from transformers import RobertaModel
+from datasets import Dataset
+
+torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cudnn.allow_tf32 = True
+torch.set_default_device('cuda')
+
 
 model = RobertaModel.from_pretrained('roberta-base')
+model.eval()
 
-encoded_input = tokenizer(corpus, return_tensors='pt', padding=True)
-output = model(**encoded_input,output_haidden_states=True)
+tokenized_dataset = Dataset.from_json("tokens.json")
 
-torch.save(output.last_hidden_state, "output.pt")
+tokenized_dataset.set_format("torch", columns=["input_ids", "attention_mask"])
+#%%
+# Run model
+import numpy as np
+
+BATCH_SIZE = 300
+
+data_loader = DataLoader(tokenized_dataset, batch_size=BATCH_SIZE)
+
+results = []
+
+with torch.no_grad():
+    i=0
+    for batch in data_loader:
+        output = model(**batch, output_hidden_states=True)
+        print("Progress:{} {:.5f}".format(i, i/len(data_loader)))
+        #results.append(output.last_hidden_state.cpu())
+        results.append(output.last_hidden_state.cpu().numpy())
+
+        if len(results) == 10:
+            #torch.save(torch.stack(results), f"outputs/output{i-9}-{i}.pt")
+            np.savez_compressed(f"outputs/output{i-9}-{i}.npz", np.stack(results))
+            results = []
+        i+=1
