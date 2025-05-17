@@ -24,7 +24,6 @@ if st.button("Search"):
         st.subheader("🔎 Search Results")
         for idx, row in results.iterrows():
             st.markdown(f"**Rank {idx + 1}**")
-            st.markdown(f"**Document ID**: {row['docno']}")
             st.markdown(f"**Similarity Score**: {row['score']:.4f}")
-            st.code(row["text"], language=language_option.lower())
+            st.code(row["originalCode"], language=language_option.lower())
             st.markdown("---")
