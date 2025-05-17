@@ -20,7 +20,7 @@ tokenizer = pt.autoclass("org.terrier.indexing.tokenisation.Tokeniser").getToken
 def strip_markup(text):
     return " ".join(tokenizer.getTokens(text))
 
-def search_code_snippet(query_snippet: str, top_k: int = 10) -> pd.DataFrame:
+def search_code_snippet(query_snippet: str, language: str, top_k: int = 10) -> pd.DataFrame:
     """
     Returns the most similar documents using BM25 for a given code snippet.
     """
