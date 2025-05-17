@@ -24,8 +24,6 @@ def search_code_snippet(query_snippet: str, language: str, top_k: int = 10) -> p
     """
     Returns the most similar documents using BM25 for a given code snippet.
     """
-    query_snippet = re.sub(r'("""|\'\'\')(.*?)(\1)', '', query_snippet, flags=re.DOTALL)
-    query_snippet = re.sub(r'#.*', '', query_snippet)
     query_snippet = re.sub(r'\n\s*\n', '\n', query_snippet)
     query_snippet = query_snippet.strip()
     query_snippet = strip_markup(query_snippet)
