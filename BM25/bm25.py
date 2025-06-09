@@ -21,8 +21,8 @@ if not os.path.exists(index_dir):
 
 index = pt.IndexFactory.of(index_dir)
 
-with open("data/code_embeddings.pt", "rb") as f:
-    precomputed_embeddings = torch.load(f)
+# with open("data/code_embeddings.pt", "rb") as f:
+    # precomputed_embeddings = torch.load(f)
 
 bm25 = pt.terrier.Retriever(index, wmodel="BM25", metadata=["docno", "originalCode", "docstring", "code"])
 
@@ -56,7 +56,15 @@ def search_code_snippet(query_snippet: str, language: str, top_k: int = 5) -> pd
     # Step 2: Compute embeddings
     query_emb = get_embedding(query_snippet, codeberta_tokenizer, codeberta_model)  # shape: [1, hidden]
     codes = initial_results["docno"].tolist()
-    doc_embeddings = torch.stack([precomputed_embeddings[docno] for docno in codes]) 
+    # doc_embeddings = torch.stack([precomputed_embeddings[docno] for docno in codes]) 
+    doc_embeddings = []
+    codes = initial_results["originalCode"].tolist()
+
+    for code in codes:
+        emb = get_embedding(code, codeberta_tokenizer, codeberta_model)
+        doc_embeddings.append(emb)
+
+    doc_embeddings = torch.cat(doc_embeddings, dim=0)  # shape: [N, hidden]
 
     # Step 3: Cosine similarity
     scores = F.cosine_similarity(query_emb, doc_embeddings)  # shape: [N]
@@ -66,4 +74,4 @@ def search_code_snippet(query_snippet: str, language: str, top_k: int = 5) -> pd
     initial_results["dense_score"] = scores.numpy()
     reranked = initial_results.sort_values("dense_score", ascending=False)
 
-    return reranked[["docno", "dense_score", "originalCode", "docstring"]].head(top_k)
+    return reranked[["docno", "dense_score", "originalCode", "docstring"]].head(top_k).reset_index(drop=True)
