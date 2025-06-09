@@ -15,7 +15,7 @@ if st.button("Search"):
     else:
         with st.spinner("Searching..."):
             if model_option == "BM25":
-                results = bm25_search(query, language=language_option, top_k=10)
+                results = bm25_search(query, language=language_option, top_k=5)
             #elif model_option == "CodeBERT":
             #   results = codebert_search(query, top_k=10, language=language_option)
             #elif model_option == "GraphCodeBERT":
@@ -24,6 +24,6 @@ if st.button("Search"):
         st.subheader("🔎 Search Results")
         for idx, row in results.iterrows():
             st.markdown(f"**Rank {idx + 1}**")
-            st.markdown(f"**Similarity Score**: {row['score']:.4f}")
+            st.markdown(f"**Similarity Score**: {row['dense_score']:.4f}")
             st.code(row["originalCode"], language=language_option.lower())
             st.markdown("---")
