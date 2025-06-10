@@ -1,0 +1,15 @@
+[
+  {
+    "query": "def reverse_string(s): return s[::-1]",
+    "relevant_docs": [
+      "def reverse(text): return text[::-1]",
+      "def rev(s): return s[::-1]"
+    ]
+  },
+  {
+    "query": "def factorial(n): return 1 if n == 0 else n * factorial(n-1)",
+    "relevant_docs": [
+      "def fact(n): return 1 if n == 0 else n * fact(n-1)"
+    ]
+  }
+]

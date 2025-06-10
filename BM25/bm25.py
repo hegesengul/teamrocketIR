@@ -5,7 +5,7 @@ import re
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
-# half
+
 codeberta_tokenizer = AutoTokenizer.from_pretrained("huggingface/CodeBERTa-small-v1")
 codeberta_model = AutoModel.from_pretrained("huggingface/CodeBERTa-small-v1")
 codeberta_model.eval()

@@ -2,6 +2,7 @@ import json
 import os
 from nltk.tokenize import word_tokenize
 import re
+import tqdm
 
 # stop_words = set(stopwords.words('english'))
 
@@ -23,7 +24,7 @@ input_file = os.path.join(save_dir, 'train_data.jsonl')
 output_file = os.path.join(save_dir, 'train_data_preprocessed.jsonl')
 
 with open(input_file, 'r', encoding='utf-8') as infile, open(output_file, 'w', encoding='utf-8') as outfile:
-    for line in infile:
+    for line in tqdm(infile):
         doc = json.loads(line)
         source_code = doc['code']
         preprocessed_code = remove_comments_and_docstrings_with_regex(source_code)
