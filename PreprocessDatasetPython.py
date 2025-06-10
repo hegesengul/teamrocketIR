@@ -1,10 +1,9 @@
 import json
 import os
-from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import re
 
-stop_words = set(stopwords.words('english'))
+# stop_words = set(stopwords.words('english'))
 
 def remove_comments_and_docstrings_with_regex(source_code):
     source_code = re.sub(r'("""|\'\'\')(.*?)(\1)', '', source_code, flags=re.DOTALL)

@@ -5,10 +5,14 @@ import re
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
-
+# half
 codeberta_tokenizer = AutoTokenizer.from_pretrained("huggingface/CodeBERTa-small-v1")
 codeberta_model = AutoModel.from_pretrained("huggingface/CodeBERTa-small-v1")
 codeberta_model.eval()
+
+roberta_tokenizer = AutoTokenizer.from_pretrained("roberta-base")
+roberta_model = AutoModel.from_pretrained("roberta-base")
+roberta_model.eval()
 
 if not pt.started():
     pt.init()
@@ -21,10 +25,7 @@ if not os.path.exists(index_dir):
 
 index = pt.IndexFactory.of(index_dir)
 
-# with open("data/code_embeddings.pt", "rb") as f:
-    # precomputed_embeddings = torch.load(f)
-
-bm25 = pt.terrier.Retriever(index, wmodel="BM25", metadata=["docno", "originalCode", "docstring", "code"])
+bm25 = pt.terrier.Retriever(index, wmodel="BM25", metadata=["docno", "originalCode", "docstring", "code", "language"])
 
 tokenizer = pt.autoclass("org.terrier.indexing.tokenisation.Tokeniser").getTokeniser()
 def strip_markup(text):
@@ -38,7 +39,7 @@ def get_embedding(text, tokenizer, model):
         # CLS token embedding (first token)
         return outputs.last_hidden_state[:, 0, :]  # shape: (1, hidden_size)
     
-def search_code_snippet(query_snippet: str, language: str, top_k: int = 5) -> pd.DataFrame:
+def search_code_snippet(query_snippet: str, model: str, top_k: int = 5) -> pd.DataFrame:
     """
     Returns the most similar documents using BM25 for a given code snippet.
     """
@@ -48,30 +49,34 @@ def search_code_snippet(query_snippet: str, language: str, top_k: int = 5) -> pd
 
     if not query_snippet:
         raise ValueError("The query is empty after cleanup. Please provide a valid code snippet.")
-
+    if model == "BM25-CodeBERTa-small-v1":
+        base_model = codeberta_model
+        base_tokenizer = codeberta_tokenizer
+    else:
+        base_model = roberta_model
+        base_tokenizer = roberta_tokenizer
     query_df = pd.DataFrame([["q1", query_snippet]], columns=["qid", "query"])
 
     initial_results = bm25.transform(query_df).head(50)
 
     # Step 2: Compute embeddings
-    query_emb = get_embedding(query_snippet, codeberta_tokenizer, codeberta_model)  # shape: [1, hidden]
+    query_emb = get_embedding(query_snippet, base_tokenizer, base_model)  # shape: [1, hidden]
     codes = initial_results["docno"].tolist()
     # doc_embeddings = torch.stack([precomputed_embeddings[docno] for docno in codes]) 
     doc_embeddings = []
     codes = initial_results["originalCode"].tolist()
 
     for code in codes:
-        emb = get_embedding(code, codeberta_tokenizer, codeberta_model)
+        emb = get_embedding(code, base_tokenizer, base_model) 
         doc_embeddings.append(emb)
 
     doc_embeddings = torch.cat(doc_embeddings, dim=0)  # shape: [N, hidden]
-
-    # Step 3: Cosine similarity
-    scores = F.cosine_similarity(query_emb, doc_embeddings)  # shape: [N]
+    differences = query_emb - doc_embeddings
+    distances = torch.linalg.norm(differences, dim=-1) # shape: [N]
+    initial_results = initial_results.copy()
+    initial_results["euclidean_distance"] = distances.numpy()
 
     # Step 4: Add scores and rerank
-    initial_results = initial_results.copy()
-    initial_results["dense_score"] = scores.numpy()
-    reranked = initial_results.sort_values("dense_score", ascending=False)
+    reranked = initial_results.sort_values("euclidean_distance", ascending=True)
 
-    return reranked[["docno", "dense_score", "originalCode", "docstring"]].head(top_k).reset_index(drop=True)
+    return reranked[["docno", "euclidean_distance", "originalCode", "docstring", "language"]].head(top_k).reset_index(drop=True)
