@@ -11,5 +11,23 @@
     "relevant_docs": [
       "def fact(n): return 1 if n == 0 else n * fact(n-1)"
     ]
+  },
+  {
+    "query": "def fibonacci(n, memo={}):\n    if n in memo:\n        return memo[n]\n    if n <= 1:\n        return n\n    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)\n    return memo[n]",
+    "relevant_docs": [
+      "def fib(n, cache={}):\n    if n in cache:\n        return cache[n]\n    if n <= 1:\n        return n\n    cache[n] = fib(n-1, cache) + fib(n-2, cache)\n    return cache[n]",
+      "public static int fib(int n, Map<Integer, Integer> memo) {\n    if (memo.containsKey(n)) return memo.get(n);\n    if (n <= 1) return n;\n    int value = fib(n - 1, memo) + fib(n - 2, memo);\n    memo.put(n, value);\n    return value;\n}",
+      "def fibonacci_memo(n, memo={}): return memo[n] if n in memo else memo.setdefault(n, n if n <= 1 else fibonacci_memo(n-1, memo) + fibonacci_memo(n-2, memo))",
+      "public static int fibonacciMemo(int n, HashMap<Integer, Integer> memo) {\n    if (memo.containsKey(n)) return memo.get(n);\n    if (n <= 1) return n;\n    int result = fibonacciMemo(n-1, memo) + fibonacciMemo(n-2, memo);\n    memo.put(n, result);\n    return result;\n}"
+    ]
+  },
+  {
+    "query": "def char_count(s):\n    # Returns a dictionary with counts of each character\n    result = {}\n    for char in s:\n        if char in result:\n            result[char] += 1\n        else:\n            result[char] = 1\n    return result",
+    "relevant_docs": [
+      "def count_chars(s):\n    freq = {}\n    for c in s:\n        freq[c] = freq.get(c, 0) + 1\n    return freq",
+      "public static Map<Character, Integer> countCharacters(String input) {\n    Map<Character, Integer> map = new HashMap<>();\n    for (char c : input.toCharArray()) {\n        map.put(c, map.getOrDefault(c, 0) + 1);\n    }\n    return map;\n}",
+      "def character_frequency(text):\n    counter = {}\n    for ch in text:\n        counter[ch] = counter.get(ch, 0) + 1\n    return counter",
+      "public Map<Character, Integer> getCharFreq(String str) {\n    Map<Character, Integer> freq = new HashMap<>();\n    for (int i = 0; i < str.length(); i++) {\n        char ch = str.charAt(i);\n        freq.put(ch, freq.getOrDefault(ch, 0) + 1);\n    }\n    return freq;\n}"
+    ]
   }
 ]

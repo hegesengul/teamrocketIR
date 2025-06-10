@@ -10,7 +10,7 @@ def load_test_data(filepath: str):
 def evaluate_ndcg(model_name: str, filepath: str, k: int = 5):
     test_queries = load_test_data(filepath)
     ndcg_scores = []
-
+    counter = 0
     for item in test_queries:
         query = item["query"]
         relevant_snippets = set(s.strip() for s in item["relevant_docs"])
@@ -27,6 +27,8 @@ def evaluate_ndcg(model_name: str, filepath: str, k: int = 5):
 
         ndcg = ndcg_score([y_true], [scores], k=k)
         ndcg_scores.append(ndcg)
+        print(f"Query: {counter}... → NDCG@{k}: {ndcg:.4f}")
+        counter += 1
 
     avg_ndcg = np.mean(ndcg_scores)
     print(f"\n🔹 Average NDCG@{k}: {avg_ndcg:.4f}")
