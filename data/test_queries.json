@@ -177,5 +177,163 @@
       "public List<Integer> processData(List<Integer> data) {\n    List<Integer> result = new ArrayList<>();\n    for (Integer item : data) {\n        if (item > 10) {\n            result.add(item * 2);\n        }\n    }\n    return result;\n}",
       "public static List<Integer> filterAndDouble(List<Integer> nums) {\n    return nums.stream().filter(n -> n > 10).map(n -> n * 2).collect(Collectors.toList());\n}"
     ]
+  },
+  {
+    "query": "try {\n    URL url = new URL(\"https://api.example.com/data\");\n    HttpURLConnection con = (HttpURLConnection) url.openConnection();\n    con.setRequestMethod(\"GET\")\n    int status = con.getResponseCode();\n    if (status == 200) {\n        // read stream\n    }\n} catch (Exception e) {\n    e.printStacktrace();\n}",
+    "relevant_docs": [
+      "try {\n    URL url = new URL(\"https://api.example.com/data\");\n    HttpURLConnection con = (HttpURLConnection) url.openConnection();\n    con.setRequestMethod(\"GET\");\n    int status = con.getResponseCode();\n    if (status == 200) {\n        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));\n        String inputLine;\n        StringBuffer content = new StringBuffer();\n        while ((inputLine = in.readLine()) != null) {\n            content.append(inputLine);\n        }\n        in.close();\n    }\n} catch (Exception e) {\n    e.printStackTrace();\n}",
+      "public String fetchData(String urlStr) throws IOException {\n    URL url = new URL(urlStr);\n    HttpURLConnection conn = (HttpURLConnection) url.openConnection();\n    conn.setRequestMethod(\"GET\");\n    int responseCode = conn.getResponseCode();\n    if (responseCode == HttpURLConnection.HTTP_OK) {\n        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));\n        StringBuilder response = new StringBuilder();\n        String inputLine;\n        while ((inputLine = in.readLine()) != null) {\n            response.append(inputLine);\n        }\n        in.close();\n        return response.toString();\n    }\n    return null;\n}",
+      "public static String getApiData() {\n    try {\n        URL url = new URL(\"https://api.example.com/data\");\n        HttpURLConnection conn = (HttpURLConnection) url.openConnection();\n        conn.setRequestMethod(\"GET\");\n        if (conn.getResponseCode() == 200) {\n            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));\n            StringBuilder output = new StringBuilder();\n            String line;\n            while ((line = reader.readLine()) != null) {\n                output.append(line);\n            }\n            return output.toString();\n        }\n    } catch (IOException e) {\n        e.printStackTrace();\n    }\n    return null;\n}"
+    ]
+  },
+  {
+    "query": "import sqlite3\nconn = sqlite3.connect('users.db')\ncursor = conn.cursor()\ncursor.execute('SELECT * FROM user WHERE id = 5')\ndata = cursor.fetchone()\nconn.clos()",
+    "relevant_docs": [
+      "import sqlite3\nconn = sqlite3.connect('users.db')\ncursor = conn.cursor()\ncursor.execute('SELECT * FROM user WHERE id = 5')\ndata = cursor.fetchone()\nconn.close()",
+      "def get_user_by_id(user_id):\n    conn = sqlite3.connect('users.db')\n    cursor = conn.cursor()\n    cursor.execute('SELECT * FROM user WHERE id = ?', (user_id,))\n    result = cursor.fetchone()\n    conn.close()\n    return result",
+      "with sqlite3.connect('users.db') as conn:\n    cursor = conn.cursor()\n    cursor.execute('SELECT * FROM user WHERE id = 5')\n    user = cursor.fetchone()"
+    ]
+  },
+  {
+    "query": "public class HelloWorld {\n    public static void main(String[] args) {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder().uri(new URI(\"https://api.example.com/data\")).build();\n        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n              .thenApply(HttpResponse::body)\n              .thenAccept(System.out::println);\n    }\n}",
+    "relevant_docs": [
+      "import java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.net.URI;\n\npublic class APIClient {\n    public static void main(String[] args) throws Exception {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n            .uri(new URI(\"https://api.example.com/data\"))\n            .build();\n\n        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n            .thenApply(HttpResponse::body)\n            .thenAccept(System.out::println)\n            .join();\n    }\n}",
+      "HttpClient client = HttpClient.newHttpClient();\nHttpRequest request = HttpRequest.newBuilder()\n    .uri(URI.create(\"https://api.example.com/data\"))\n    .build();\nclient.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n      .thenApply(HttpResponse::body)\n      .thenAccept(System.out::println)\n      .join();",
+      "public void fetchData() throws Exception {\n    HttpClient client = HttpClient.newHttpClient();\n    HttpRequest request = HttpRequest.newBuilder()\n        .uri(new URI(\"https://api.example.com/data\"))\n        .GET()\n        .build();\n    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n          .thenApply(HttpResponse::body)\n          .thenAccept(System.out::println)\n          .join();\n}"
+    ]
+  },
+  {
+    "query": "def upload_to_bucket(bucket, key, data):\n    session = boto3.Session()\n    s3 = session.client('s3')\n    s3.putObject(Bucket=bucket, Key=key, Body=data)",
+    "relevant_docs": [
+      "def upload_file_to_s3(bucket_name, file_name, file_data):\n    s3 = boto3.client('s3')\n    s3.put_object(Bucket=bucket_name, Key=file_name, Body=file_data)",
+      "import boto3\n\ndef save_to_s3(bucket, key, content):\n    client = boto3.client('s3')\n    client.put_object(Bucket=bucket, Key=key, Body=content)",
+      "def write_s3(bucket, key, body):\n    session = boto3.Session()\n    client = session.client('s3')\n    client.put_object(Bucket=bucket, Key=key, Body=body)"
+    ]
+  },
+  {
+    "query": "extract_values(obj, keys):\n    result = {}\n    for key in keys:\n        if key in obj\n            result[key] = obj[key]\n    return res",
+    "relevant_docs": [
+      "def extract_values(obj, keys):\n    result = {}\n    for key in keys:\n        if key in obj:\n            result[key] = obj[key]\n    return result",
+      "def get_selected_fields(data, fields):\n    return {k: data[k] for k in fields if k in data}",
+      "public Map<String, Object> extractValues(Map<String, Object> json, List<String> keys) {\n    Map<String, Object> result = new HashMap<>();\n    for (String key : keys) {\n        if (json.containsKey(key)) {\n            result.put(key, json.get(key));\n        }\n    }\n    return result;\n}"
+    ]
+  },
+  {
+    "query": "bool isEmailValid(String email) {\n  String pattern = \"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}\";\n  return email.match(pattern);\n}",
+    "relevant_docs": [
+      "public boolean isEmailValid(String email) {\n    String pattern = \"^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$\";\n    return email.matches(pattern);\n}",
+      "import re\n\ndef is_valid_email(email):\n    pattern = r\"^[\\w\\.-]+@[\\w\\.-]+\\.\\w+$\"\n    return re.match(pattern, email) is not None",
+      "def validate_email(email):\n    import re\n    regex = r\"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}\"\n    return re.fullmatch(regex, email) is not None"
+    ]
+  },
+  {
+    "query": "files.filter(ext => ext.endswith('.mp3') or ext.endswith('.wav') or ext.includes('audio'))",
+    "relevant_docs": [
+      "def filter_audio_files(file_list):\n    return [f for f in file_list if f.endswith('.mp3') or f.endswith('.wav')]",
+      "public List<String> filterAudioFiles(List<String> files) {\n    return files.stream()\n        .filter(f -> f.endsWith(\".mp3\") || f.endsWith(\".wav\"))\n        .collect(Collectors.toList());\n}",
+      "def get_audio_files(files):\n    return [file for file in files if '.mp3' in file or '.wav' in file or 'audio' in file]"
+    ]
+  },
+  {
+    "query": "ip_list = [addr for addr in user_ips if '127.' not in addr and not addr.start_with('::1')]",
+    "relevant_docs": [
+      "def filter_public_ips(ips):\n    return [ip for ip in ips if not ip.startswith('127.') and not ip.startswith('::1')]",
+      "public List<String> getExternalIPs(List<String> ips) {\n    return ips.stream()\n        .filter(ip -> !ip.startsWith(\"127.\") && !ip.startsWith(\"::1\"))\n        .collect(Collectors.toList());\n}",
+      "def exclude_localhost(ips):\n    return [ip for ip in ips if not ip.startswith('127.') and '::1' not in ip]"
+    ]
+  },
+  {
+    "query": "encoded_data = b64encode(open(filepath).read())\nsend_data(encoded_data, url)",
+    "relevant_docs": [
+      "def send_encoded_file(filepath, url):\n    with open(filepath, 'rb') as f:\n        data = base64.b64encode(f.read())\n    requests.post(url, data=data)",
+      "public static void uploadBase64(String filePath, String url) throws IOException {\n    byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));\n    String encoded = Base64.getEncoder().encodeToString(fileBytes);\n    HttpRequest request = HttpRequest.newBuilder()\n        .uri(URI.create(url))\n        .POST(HttpRequest.BodyPublishers.ofString(encoded))\n        .build();\n    HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.discarding());\n}",
+      "def upload_file_base64(path, endpoint):\n    import base64\n    import requests\n    with open(path, 'rb') as f:\n        encoded = base64.b64encode(f.read())\n    requests.post(endpoint, data=encoded)"
+    ]
+  },
+  {
+    "query": "if not '@' in mail or '.' not in mail:\n    raise 'invalid email'",
+    "relevant_docs": [
+      "def is_valid_email(email):\n    import re\n    pattern = r'^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$'\n    return re.match(pattern, email) is not None",
+      "public static boolean validateEmail(String email) {\n    return email.matches(\"^[\\\\w.-]+@[\\\\w.-]+\\\\.\\\\w{2,}$\");\n}",
+      "def validate_email_format(mail):\n    if '@' not in mail or '.' not in mail.split('@')[-1]:\n        raise ValueError('Invalid email format')"
+    ]
+  },
+  {
+    "query": "def parse_json(data):\n    return json.loads(date)",
+    "relevant_docs": [
+      "import json\n\ndef parse_json(data):\n    return json.loads(data)",
+      "import json\n\ndef from_json(json_string):\n    \"\"\"Parses JSON string into Python dict\"\"\"\n    return json.loads(json_string)",
+      "import com.fasterxml.jackson.databind.ObjectMapper;\n\npublic Map<String, Object> parseJson(String json) throws IOException {\n    ObjectMapper mapper = new ObjectMapper();\n    return mapper.readValue(json, Map.class);\n}",
+      "import org.json.JSONObject;\n\npublic JSONObject parseJsonString(String json) {\n    return new JSONObject(json);\n}"
+    ]
+  },
+  {
+    "query": "def get_data(url):\n    response = requests.get(url, header=None)\n    return response.json",
+    "relevant_docs": [
+      "import requests\n\ndef get_data(url):\n    response = requests.get(url)\n    return response.json()",
+      "import requests\n\ndef fetch_json(endpoint):\n    \"\"\"Performs GET request and returns JSON response\"\"\"\n    res = requests.get(endpoint)\n    return res.json()",
+      "import java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.net.URI;\n\npublic String getData(String url) throws Exception {\n    HttpClient client = HttpClient.newHttpClient();\n    HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();\n    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());\n    return response.body();\n}",
+      "import okhttp3.OkHttpClient;\nimport okhttp3.Request;\nimport okhttp3.Response;\n\npublic String fetchJson(String url) throws IOException {\n    OkHttpClient client = new OkHttpClient();\n    Request request = new Request.Builder().url(url).build();\n    try (Response response = client.newCall(request).execute()) {\n        return response.body().string();\n    }\n}"
+    ]
+  },
+  {
+    "query": "def filter_active_users():\n    with open('users.json') as f:\n        data = json.load(f)\n    active = []\n    for user in data:\n        if user['active'] = True:\n            active.append(user)",
+    "relevant_docs": [
+      "import json\n\ndef filter_active_users(filepath):\n    with open(filepath, 'r') as file:\n        data = json.load(file)\n    return [user for user in data if user.get('active') == True]",
+      "import json\n\ndef get_active_users(file_path):\n    \"\"\"Reads a JSON file and returns list of active users\"\"\"\n    with open(file_path) as f:\n        users = json.load(f)\n    active_users = list(filter(lambda u: u.get('active') is True, users))\n    return active_users",
+      "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\npublic List<User> filterActiveUsers(String filepath) throws Exception {\n    byte[] jsonData = Files.readAllBytes(Paths.get(filepath));\n    ObjectMapper mapper = new ObjectMapper();\n    List<User> users = mapper.readValue(jsonData, mapper.getTypeFactory().constructCollectionType(List.class, User.class));\n    return users.stream().filter(User::isActive).collect(Collectors.toList());\n}",
+      "import org.json.JSONArray;\nimport java.nio.file.Files;\nimport java.nio.file.Paths;\n\npublic List<JSONObject> getActiveUsers(String filepath) throws Exception {\n    String content = new String(Files.readAllBytes(Paths.get(filepath)));\n    JSONArray array = new JSONArray(content);\n    List<JSONObject> activeUsers = new ArrayList<>();\n    for (int i = 0; i < array.length(); i++) {\n        JSONObject user = array.getJSONObject(i);\n        if (user.getBoolean(\"active\")) {\n            activeUsers.add(user);\n        }\n    }\n    return activeUsers;\n}"
+    ]
+  },
+  {
+    "query": "from kafka import KafkaConsumer\n\nconsumer = KafkaConsumer('my_topic1')\nfor message in consumer.poll():\n    print(message.value)",
+    "relevant_docs": [
+      "from kafka import KafkaConsumer\n\nconsumer = KafkaConsumer('my_topic')\nfor message in consumer:\n    print(message.value)",
+      "import org.apache.kafka.clients.consumer.ConsumerRecord;\nimport org.apache.kafka.clients.consumer.ConsumerRecords;\nimport org.apache.kafka.clients.consumer.KafkaConsumer;\nimport java.time.Duration;\nimport java.util.Collections;\nimport java.util.Properties;\n\npublic class SimpleConsumer {\n    public static void main(String[] args) {\n        Properties props = new Properties();\n        props.put(\"bootstrap.servers\", \"localhost:9092\");\n        props.put(\"group.id\", \"test-group\");\n        props.put(\"key.deserializer\", \"org.apache.kafka.common.serialization.StringDeserializer\");\n        props.put(\"value.deserializer\", \"org.apache.kafka.common.serialization.StringDeserializer\");\n\n        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);\n        consumer.subscribe(Collections.singletonList(\"my_topic\"));\n\n        while (true) {\n            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));\n            for (ConsumerRecord<String, String> record : records) {\n                System.out.println(record.value());\n            }\n        }\n    }\n}",
+      "from kafka import KafkaConsumer\n\nconsumer = KafkaConsumer('my_topic')\nfor msg in consumer:\n    print(msg.value)"
+    ]
+  },
+  {
+    "query": "from flask import Flask, request\napp = Flask(__name__)\n\n@app.route('/data', methods=['get'])\ndef data():\n    json_data = request.get_json()\n    return json_data",
+    "relevant_docs": [
+      "from flask import Flask, request, jsonify\napp = Flask(__name__)\n\n@app.route('/data', methods=['POST'])\ndef data():\n    json_data = request.get_json()\n    return jsonify(json_data)",
+      "import spark.Request;\nimport spark.Response;\nimport static spark.Spark.*;\n\npublic class SimpleApi {\n    public static void main(String[] args) {\n        post(\"/data\", (Request req, Response res) -> {\n            String body = req.body();\n            res.type(\"application/json\");\n            return body;\n        });\n    }\n}",
+      "from flask import Flask, request\napp = Flask(__name__)\n\n@app.route('/data', methods=['POST'])\ndef data():\n    data = request.get_json()\n    return data"
+    ]
+  },
+  {
+    "query": "import boto3\ndynamodb = boto3.resource('dynamodb')\ntable = dynamodb.Table('WrongTableName')\n\ndef lambda_handler():\n    response = table.get_item(Key={'id': '123'})\n    return response.get('Item')",
+    "relevant_docs": [
+      "import boto3\nfrom boto3.dynamodb.conditions import Key\n\ndynamodb = boto3.resource('dynamodb')\ntable = dynamodb.Table('Users')\n\ndef lambda_handler(event, context):\n    response = table.get_item(Key={'id': event['userId']})\n    return response.get('Item')",
+      "import software.amazon.awssdk.services.dynamodb.DynamoDbClient;\nimport software.amazon.awssdk.services.dynamodb.model.GetItemRequest;\nimport software.amazon.awssdk.services.dynamodb.model.AttributeValue;\n\npublic class DynamoDbExample {\n    private static final DynamoDbClient ddb = DynamoDbClient.create();\n    public static Map<String, AttributeValue> getItem(String id) {\n        GetItemRequest request = GetItemRequest.builder()\n            .tableName(\"Users\")\n            .key(Collections.singletonMap(\"id\", AttributeValue.builder().s(id).build()))\n            .build();\n        return ddb.getItem(request).item();\n    }\n}",
+      "import boto3\n\ndynamodb = boto3.resource('dynamodb')\ntable = dynamodb.Table('Users')\n\ndef lambda_handler(event, context):\n    response = table.get_item(Key={'id': event['id']})\n    return response.get('Item')"
+    ]
+  },
+  {
+    "query": "def count_filtered_lines(file_path, keyword):\n    count = 0\n    with open(filepth, 'r') as f:\n        for line in f:\n            if keyword in line:\n                count += 1",
+    "relevant_docs": [
+      "def count_filtered_lines(file_path, keyword):\n    count = 0\n    with open(file_path, 'r') as f:\n        for line in f:\n            if keyword in line:\n                count += 1\n    return count",
+      "def filter_lines(file_path, word):\n    with open(file_path, 'r') as f:\n        lines = [line for line in f if word in line]\n    return len(lines)",
+      "public static long countFilteredLines(String filepath, String keyword) throws IOException {\n    return Files.lines(Paths.get(filepath))\n                .filter(line -> line.contains(keyword))\n                .count();\n}",
+      "import java.nio.file.Files;\nimport java.nio.file.Paths;\nimport java.io.IOException;\n\npublic class FileUtil {\n    public static long filterLineCount(String path, String key) throws IOException {\n        return Files.lines(Paths.get(path))\n            .filter(l -> l.contains(key))\n            .count();\n    }\n}"
+    ]
+  },
+  {
+    "query": "import requests\n\ndef send_get_request():\n    response = requests.get()\n    if response.status_code == 200:\n        return response.json()",
+    "relevant_docs": [
+      "import requests\n\ndef send_get_request(url):\n    response = requests.get(url)\n    if response.status_code == 200:\n        return response.json()\n    return None",
+      "import requests\n\ndef fetch_data(endpoint):\n    try:\n        r = requests.get(endpoint)\n        r.raise_for_status()\n        return r.json()\n    except requests.exceptions.RequestException as e:\n        print(e)\n        return None",
+      "import java.net.HttpURLConnection;\nimport java.net.URL;\nimport java.io.BufferedReader;\nimport java.io.InputStreamReader;\n\npublic class HttpClient {\n    public static String sendGetRequest(String url) throws Exception {\n        URL obj = new URL(url);\n        HttpURLConnection con = (HttpURLConnection) obj.openConnection();\n        con.setRequestMethod(\"GET\");\n        int responseCode = con.getResponseCode();\n        if (responseCode == 200) {\n            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));\n            String inputLine;\n            StringBuffer response = new StringBuffer();\n            while ((inputLine = in.readLine()) != null) {\n                response.append(inputLine);\n            }\n            in.close();\n            return response.toString();\n        } else {\n            return null;\n        }\n    }\n}",
+      "import java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.net.URI;\n\npublic class SimpleHttpClient {\n    public static String get(String uri) throws Exception {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n            .uri(URI.create(uri))\n            .build();\n        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());\n        if (response.statusCode() == 200) {\n            return response.body();\n        }\n        return null;\n    }\n}"
+    ]
+  },
+  {
+    "query": "def check_login(user, passw):\n    if user == 'admin' and passw == '1234':\n        print('Access granted')",
+    "relevant_docs": [
+      "def check_login(username, password):\n    if username == 'admin' and password == '1234':\n        return True\n    return False",
+      "def validate_user(u, p):\n    return u == 'admin' and p == '1234'",
+      "public class Auth {\n    public static boolean checkLogin(String user, String pass) {\n        return user.equals(\"admin\") && pass.equals(\"1234\");\n    }\n}",
+      "public class LoginValidator {\n    public boolean validate(String username, String password) {\n        if (\"admin\".equals(username) && \"1234\".equals(password)) {\n            return true;\n        }\n        return false;\n    }\n}"
+    ]
   }
 ]
