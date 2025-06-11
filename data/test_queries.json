@@ -29,5 +29,110 @@
       "def character_frequency(text):\n    counter = {}\n    for ch in text:\n        counter[ch] = counter.get(ch, 0) + 1\n    return counter",
       "public Map<Character, Integer> getCharFreq(String str) {\n    Map<Character, Integer> freq = new HashMap<>();\n    for (int i = 0; i < str.length(); i++) {\n        char ch = str.charAt(i);\n        freq.put(ch, freq.getOrDefault(ch, 0) + 1);\n    }\n    return freq;\n}"
     ]
+  },
+  {
+    "query": "def count_lines(filepath):\n    # Opens a file and counts the number of lines\n    with open(filepath, 'r') as f:\n        return sum(1 for _ in f)",
+    "relevant_docs": [
+      "def num_lines(file_path):\n    with open(file_path, 'r') as f:\n        return len(f.readlines())",
+      "def get_line_count(path):\n    with open(path) as f:\n        count = 0\n        for line in f:\n            count += 1\n        return count",
+      "public static int countLines(String filename) throws IOException {\n    BufferedReader reader = new BufferedReader(new FileReader(filename));\n    int lines = 0;\n    while (reader.readLine() != null) lines++;\n    reader.close();\n    return lines;\n}",
+      "public int lineCount(String file) throws IOException {\n    try (BufferedReader br = new BufferedReader(new FileReader(file))) {\n        int count = 0;\n        while (br.readLine() != null) {\n            count++;\n        }\n        return count;\n    }\n}"
+    ]
+  },
+  {
+    "query": "def is_palindrome(s):\n    # Check if string is the same forwards and backwards\n    return s == s[::-1]",
+    "relevant_docs": [
+      "def check_palindrome(s): return s == s[::-1]",
+      "def is_pal(s):\n    return s == ''.join(reversed(s))",
+      "public static boolean isPalindrome(String s) {\n    return new StringBuilder(s).reverse().toString().equals(s);\n}",
+      "public boolean checkPalindrome(String str) {\n    int n = str.length();\n    for (int i = 0; i < n / 2; i++) {\n        if (str.charAt(i) != str.charAt(n - i - 1)) return false;\n    }\n    return true;\n}"
+    ]
+  },
+  {
+    "query": "def bubble_sort(arr):\n    # Simple implementation of bubble sort\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]",
+    "relevant_docs": [
+      "def sort_bubble(a):\n    n = len(a)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if a[j] > a[j+1]:\n                a[j], a[j+1] = a[j+1], a[j]",
+      "def bubble(arr):\n    for i in range(len(arr)):\n        for j in range(len(arr)-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]",
+      "public static void bubbleSort(int[] arr) {\n    int n = arr.length;\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                int temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n            }\n        }\n    }\n}",
+      "public void bubbleSortArray(int[] array) {\n    for (int i = 0; i < array.length - 1; i++) {\n        for (int j = 0; j < array.length - i - 1; j++) {\n            if (array[j] > array[j + 1]) {\n                int temp = array[j];\n                array[j] = array[j + 1];\n                array[j + 1] = temp;\n            }\n        }\n    }\n}"
+    ]
+  },
+  {
+    "query": "def sum_list(nums):\n    total = 0\n    for n in nums:\n        total == total + n",
+    "relevant_docs": [
+      "def sum_list(nums):\n    total = 0\n    for n in nums:\n        total += n\n    return total",
+      "def calc_sum(arr):\n    result = 0\n    for i in arr:\n        result += i\n    return result",
+      "public static int sumList(int[] nums) {\n    int total = 0;\n    for (int num : nums) {\n        total += num;\n    }\n    return total;\n}",
+      "public int calculateSum(int[] arr) {\n    int sum = 0;\n    for (int i = 0; i < arr.length; i++) {\n        sum += arr[i];\n    }\n    return sum;\n}"
+    ]
+  },
+  {
+    "query": "def max_of_two(a, b):\n    if a > b:\n        a\n    else:\n        b",
+    "relevant_docs": [
+      "def max_of_two(a, b):\n    return a if a > b else b",
+      "def get_max(x, y):\n    if x > y:\n        return x\n    else:\n        return y",
+      "public static int max(int a, int b) {\n    return (a > b) ? a : b;\n}",
+      "public int maximum(int x, int y) {\n    if (x > y) {\n        return x;\n    } else {\n        return y;\n    }\n}"
+    ]
+  },
+  {
+    "query": "def count_words(text):\n    words = text.split(' ')\n    for w in words:\n        count += 1",
+    "relevant_docs": [
+      "def count_words(text):\n    words = text.split()\n    return len(words)",
+      "def get_word_count(sentence):\n    # Splits a sentence by whitespace and returns the number of words\n    count = 0\n    for word in sentence.strip().split():\n        count += 1\n    return count",
+      "public static int countWords(String str) {\n    if (str == null || str.trim().isEmpty()) return 0;\n    String[] words = str.trim().split(\"\\\\s+\");\n    return words.length;\n}",
+      "public int wordCount(String input) {\n    String trimmed = input.trim();\n    if (trimmed.isEmpty()) return 0;\n    return trimmed.split(\"\\\\s+\").length;\n}"
+    ]
+  },
+  {
+    "query": "def filter_positive(numbers):\n    result = []\n    for n in numbres:\n        if n > 0:\n            result.append(n)",
+    "relevant_docs": [
+      "def filter_positive(numbers):\n    return [n for n in numbers if n > 0]",
+      "def get_positives(lst):\n    # Filters out negative values\n    positives = []\n    for item in lst:\n        if item > 0:\n            positives.append(item)\n    return positives",
+      "public List<Integer> filterPositives(List<Integer> nums) {\n    List<Integer> result = new ArrayList<>();\n    for (int n : nums) {\n        if (n > 0) {\n            result.add(n);\n        }\n    }\n    return result;\n}",
+      "public static int[] getPositiveOnly(int[] arr) {\n    return Arrays.stream(arr).filter(i -> i > 0).toArray();\n}"
+    ]
+  },
+  {
+    "query": "def count_letters(text):\n    for ch in text:\n        if ch.isalpha():\n            counts[ch] += 1",
+    "relevant_docs": [
+      "def count_letters(text):\n    counts = {}\n    for ch in text:\n        if ch.isalpha():\n            counts[ch] = counts.get(ch, 0) + 1\n    return counts",
+      "def letter_frequency(s):\n    # Count the frequency of alphabetic characters\n    freq = dict()\n    for c in s:\n        if c.isalpha():\n            freq[c] = freq.get(c, 0) + 1\n    return freq",
+      "public Map<Character, Integer> countLetters(String text) {\n    Map<Character, Integer> map = new HashMap<>();\n    for (char c : text.toCharArray()) {\n        if (Character.isLetter(c)) {\n            map.put(c, map.getOrDefault(c, 0) + 1);\n        }\n    }\n    return map;\n}",
+      "public static Map<Character, Integer> letterFrequency(String str) {\n    Map<Character, Integer> freq = new HashMap<>();\n    for (char ch : str.toCharArray()) {\n        if (Character.isAlphabetic(ch)) {\n            freq.put(ch, freq.getOrDefault(ch, 0) + 1);\n        }\n    }\n    return freq;\n}"
+    ]
+  },
+  {
+    "query": "def square_all(vals):\n    for i in range(len(val)):\n        val[i] = val[i] ** 2",
+    "relevant_docs": [
+      "def square_all(vals):\n    return [x**2 for x in vals]",
+      "def square_numbers(numbers):\n    # Squares each number in the list and returns a new list\n    result = []\n    for num in numbers:\n        result.append(num * num)\n    return result",
+      "public List<Integer> squareAll(List<Integer> numbers) {\n    List<Integer> result = new ArrayList<>();\n    for (int n : numbers) {\n        result.add(n * n);\n    }\n    return result;\n}",
+      "public static int[] squareArray(int[] arr) {\n    return Arrays.stream(arr).map(n -> n * n).toArray();\n}"
+    ]
+  },
+  {
+    "query": "import requests\n\ndef get_user_data(user_id):\n    url = 'https://api.example.com/user/' + str(userid)\n    response = requests.get(url)\n    data = response.json()\n    return data",
+    "relevant_docs": [
+      "import requests\n\ndef get_user_data(user_id):\n    url = f'https://api.example.com/user/{user_id}'\n    headers = {'Authorization': 'Bearer YOUR_API_TOKEN'}\n    response = requests.get(url, headers=headers)\n    if response.status_code == 200:\n        return response.json()\n    else:\n        response.raise_for_status()",
+      "import requests\n\ndef fetch_user_info(user_id):\n    url = f'https://api.example.com/user/{user_id}'\n    headers = {'Authorization': 'Bearer TOKEN123'}\n    try:\n        res = requests.get(url, headers=headers)\n        res.raise_for_status()\n        return res.json()\n    except requests.exceptions.RequestException as e:\n        print(f'API error: {e}')\n        return None",
+      "public String getUserData(String userId) throws IOException {\n    String url = \"https://api.example.com/user/\" + userId;\n    HttpClient client = HttpClient.newHttpClient();\n    HttpRequest request = HttpRequest.newBuilder()\n        .uri(URI.create(url))\n        .header(\"Authorization\", \"Bearer YOUR_API_TOKEN\")\n        .build();\n    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());\n    if (response.statusCode() == 200) {\n        return response.body();\n    } else {\n        throw new IOException(\"Failed to get user data: \" + response.statusCode());\n    }\n}",
+      "public static String fetchUserInfo(String userId) {\n    try {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n            .uri(URI.create(\"https://api.example.com/user/\" + userId))\n            .header(\"Authorization\", \"Bearer TOKEN123\")\n            .build();\n        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());\n        if (response.statusCode() == 200) {\n            return response.body();\n        }\n    } catch (Exception e) {\n        e.printStackTrace();\n    }\n    return null;\n}"
+    ]
+  },
+  {
+    "query": "import boto3\n\ndef lambda_handler(event, context):\n    s3 = boto3.client('s3')\n    bucket = event['bucketName']\n    key = event['key']\n    response = s3.get_object(Bucket=bucket, Key=key)\n    content = response['Body'].read().decode('utf-8')\n    print(content)",
+    "relevant_docs": [
+      "import boto3\n\ndef lambda_handler(event, context):\n    s3 = boto3.client('s3')\n    bucket = event['Records'][0]['s3']['bucket']['name']\n    key = event['Records'][0]['s3']['object']['key']\n    response = s3.get_object(Bucket=bucket, Key=key)\n    content = response['Body'].read().decode('utf-8')\n    print('File content:', content)\n    return {'statusCode': 200, 'body': content}",
+      "public class LambdaS3Handler {\n    public String handleRequest(S3Event event, Context context) {\n        S3Object s3Object = event.getRecords().get(0).getS3().getObject();\n        String bucketName = event.getRecords().get(0).getS3().getBucket().getName();\n        String key = s3Object.getKey();\n        AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();\n        S3Object object = s3Client.getObject(bucketName, key);\n        try (InputStream input = object.getObjectContent()) {\n            return new String(input.readAllBytes(), StandardCharsets.UTF_8);\n        } catch (IOException e) {\n            e.printStackTrace();\n            return null;\n        }\n    }\n}"
+    ]
+  },
+  {
+    "query": "def filter_and_sort(nums):\n    filtered = [n for n in nums if n % 2 == 0]\n    sorted_list = sorted(filtered, reverse=True)\n    return sorted_list",
+    "relevant_docs": [
+      "def filter_and_sort(nums):\n    '''Filters even numbers and sorts them descending.'''\n    evens = [x for x in nums if x % 2 == 0]\n    return sorted(evens, reverse=True)",
+      "def even_descending(numbers):\n    '''Return even numbers sorted from highest to lowest.'''\n    return sorted(filter(lambda x: x % 2 == 0, numbers), reverse=True)",
+      "public List<Integer> filterAndSort(List<Integer> nums) {\n    return nums.stream()\n               .filter(n -> n % 2 == 0)\n               .sorted(Comparator.reverseOrder())\n               .collect(Collectors.toList());\n}"
+    ]
   }
 ]
