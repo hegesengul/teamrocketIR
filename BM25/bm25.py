@@ -4,7 +4,10 @@ import os
 import re
 from transformers import AutoTokenizer, AutoModel
 import torch
+import numpy as np
 import torch.nn.functional as F
+
+torch.set_default_device("cuda")
 
 codeberta_tokenizer = AutoTokenizer.from_pretrained("huggingface/CodeBERTa-small-v1")
 codeberta_model = AutoModel.from_pretrained("huggingface/CodeBERTa-small-v1")
@@ -33,7 +36,7 @@ def strip_markup(text):
 
 
 def get_embedding(text, tokenizer, model):
-    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512)
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, padding=True, max_length=512).to("cuda")
     with torch.no_grad():
         outputs = model(**inputs)
         # CLS token embedding (first token)
@@ -70,11 +73,14 @@ def search_code_snippet(query_snippet: str, model: str, top_k: int = 5) -> pd.Da
         emb = get_embedding(code, base_tokenizer, base_model) 
         doc_embeddings.append(emb)
 
+    if not doc_embeddings:
+        return []
+
     doc_embeddings = torch.cat(doc_embeddings, dim=0)  # shape: [N, hidden]
     differences = query_emb - doc_embeddings
     distances = torch.linalg.norm(differences, dim=-1) # shape: [N]
     initial_results = initial_results.copy()
-    initial_results["euclidean_distance"] = distances.numpy()
+    initial_results["euclidean_distance"] = distances.cpu().numpy()
 
     # Step 4: Add scores and rerank
     reranked = initial_results.sort_values("euclidean_distance", ascending=True)

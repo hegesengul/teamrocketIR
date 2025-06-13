@@ -25,7 +25,7 @@ def extract_python_from_gz(files):
     print(f"[💾] Python code saved as {output_file}.")
 
 def extract_java_from_gz(files):
-    data_java_dir = "data/java/java/final/jsonl/train"
+    data_java_dir = "data/java/final/jsonl/train"
     save_java_dir = "codesearchnet_cached/java"
 
     os.makedirs(save_java_dir, exist_ok=True) 

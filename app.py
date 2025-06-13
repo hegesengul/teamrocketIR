@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from BM25.bm25 import search_code_snippet as bm25_search
 
 st.set_page_config(page_title="Code Search Engine", layout="wide")
@@ -16,10 +17,11 @@ if st.button("Search"):
             results = bm25_search(query, model_option, top_k=5)
 
         st.subheader("🔎 Search Results")
-        for idx, row in results.iterrows():
-            st.markdown(f"**Rank {idx + 1}**")
-            st.markdown(f"**Distance**: {row['euclidean_distance']:.4f}")
-            st.code(row["originalCode"], language=row["language"])
-            st.markdown("---")
-
-# TODO test
+        if type(results) is not pd.DataFrame and not results:
+            st.warning("No results found.")
+        else:
+            for idx, row in results.iterrows():
+                st.markdown(f"**Rank {idx + 1}**")
+                st.markdown(f"**Distance**: {row['euclidean_distance']:.4f}")
+                st.code(row["originalCode"], language=row["language"])
+                st.markdown("---")

@@ -1,17 +1,19 @@
 [
   {
-    "query": "def reverse_string(s): return s[::-1]",
-    "relevant_docs": [
-      "def reverse(text): return text[::-1]",
-      "def rev(s): return s[::-1]"
-    ]
-  },
-  {
-    "query": "def factorial(n): return 1 if n == 0 else n * factorial(n-1)",
+    "query": "def factorial(n): return 1 if n == 0 else n * factorial(n-1)" ,
     "relevant_docs": [
       "def fact(n): return 1 if n == 0 else n * fact(n-1)",
       "def factorial(n):\n    \"\"\" Returns the factorial of n.\n    \"\"\"\n    f = 1\n    while (n > 0):\n        f = f * n\n        n = n - 1\n    return f",
       "def factorial(n): return 1 if n == 0 else n * factorial(n-1)"
+    ]
+  },
+  {
+    "query": "def is_palindrome(s):\n    # Check if string is the same forwards and backwards\n    return s == s[::-1]",
+    "relevant_docs": [
+      "def check_palindrome(s): return s == s[::-1]",
+      "def is_pal(s):\n    return s == ''.join(reversed(s))",
+      "public static boolean isPalindrome(String s) {\n    return new StringBuilder(s).reverse().toString().equals(s);\n}",
+      "public boolean checkPalindrome(String str) {\n    int n = str.length();\n    for (int i = 0; i < n / 2; i++) {\n        if (str.charAt(i) != str.charAt(n - i - 1)) return false;\n    }\n    return true;\n}"
     ]
   },
   {
@@ -21,6 +23,21 @@
       "public static int fib(int n, Map<Integer, Integer> memo) {\n    if (memo.containsKey(n)) return memo.get(n);\n    if (n <= 1) return n;\n    int value = fib(n - 1, memo) + fib(n - 2, memo);\n    memo.put(n, value);\n    return value;\n}",
       "def fibonacci_memo(n, memo={}): return memo[n] if n in memo else memo.setdefault(n, n if n <= 1 else fibonacci_memo(n-1, memo) + fibonacci_memo(n-2, memo))",
       "public static int fibonacciMemo(int n, HashMap<Integer, Integer> memo) {\n    if (memo.containsKey(n)) return memo.get(n);\n    if (n <= 1) return n;\n    int result = fibonacciMemo(n-1, memo) + fibonacciMemo(n-2, memo);\n    memo.put(n, result);\n    return result;\n}"
+    ]
+  },
+    {
+    "query": "public class HelloWorld {\n    public static void main(String[] args) {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder().uri(new URI(\"https://api.example.com/data\")).build();\n        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n              .thenApply(HttpResponse::body)\n              .thenAccept(System.out::println);\n    }\n}",
+    "relevant_docs": [
+      "import java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.net.URI;\n\npublic class APIClient {\n    public static void main(String[] args) throws Exception {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n            .uri(new URI(\"https://api.example.com/data\"))\n            .build();\n\n        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n            .thenApply(HttpResponse::body)\n            .thenAccept(System.out::println)\n            .join();\n    }\n}",
+      "HttpClient client = HttpClient.newHttpClient();\nHttpRequest request = HttpRequest.newBuilder()\n    .uri(URI.create(\"https://api.example.com/data\"))\n    .build();\nclient.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n      .thenApply(HttpResponse::body)\n      .thenAccept(System.out::println)\n      .join();",
+      "public void fetchData() throws Exception {\n    HttpClient client = HttpClient.newHttpClient();\n    HttpRequest request = HttpRequest.newBuilder()\n        .uri(new URI(\"https://api.example.com/data\"))\n        .GET()\n        .build();\n    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n          .thenApply(HttpResponse::body)\n          .thenAccept(System.out::println)\n          .join();\n}"
+    ]
+  },
+  {
+    "query": "def reverse_string(s): return s[::-1]",
+    "relevant_docs": [
+      "def reverse(text): return text[::-1]",
+      "def rev(s): return s[::-1]"
     ]
   },
   {
@@ -39,15 +56,6 @@
       "def get_line_count(path):\n    with open(path) as f:\n        count = 0\n        for line in f:\n            count += 1\n        return count",
       "public static int countLines(String filename) throws IOException {\n    BufferedReader reader = new BufferedReader(new FileReader(filename));\n    int lines = 0;\n    while (reader.readLine() != null) lines++;\n    reader.close();\n    return lines;\n}",
       "public int lineCount(String file) throws IOException {\n    try (BufferedReader br = new BufferedReader(new FileReader(file))) {\n        int count = 0;\n        while (br.readLine() != null) {\n            count++;\n        }\n        return count;\n    }\n}"
-    ]
-  },
-  {
-    "query": "def is_palindrome(s):\n    # Check if string is the same forwards and backwards\n    return s == s[::-1]",
-    "relevant_docs": [
-      "def check_palindrome(s): return s == s[::-1]",
-      "def is_pal(s):\n    return s == ''.join(reversed(s))",
-      "public static boolean isPalindrome(String s) {\n    return new StringBuilder(s).reverse().toString().equals(s);\n}",
-      "public boolean checkPalindrome(String str) {\n    int n = str.length();\n    for (int i = 0; i < n / 2; i++) {\n        if (str.charAt(i) != str.charAt(n - i - 1)) return false;\n    }\n    return true;\n}"
     ]
   },
   {
@@ -200,14 +208,6 @@
       "import sqlite3\nconn = sqlite3.connect('users.db')\ncursor = conn.cursor()\ncursor.execute('SELECT * FROM user WHERE id = 5')\ndata = cursor.fetchone()\nconn.close()",
       "def get_user_by_id(user_id):\n    conn = sqlite3.connect('users.db')\n    cursor = conn.cursor()\n    cursor.execute('SELECT * FROM user WHERE id = ?', (user_id,))\n    result = cursor.fetchone()\n    conn.close()\n    return result",
       "with sqlite3.connect('users.db') as conn:\n    cursor = conn.cursor()\n    cursor.execute('SELECT * FROM user WHERE id = 5')\n    user = cursor.fetchone()"
-    ]
-  },
-  {
-    "query": "public class HelloWorld {\n    public static void main(String[] args) {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder().uri(new URI(\"https://api.example.com/data\")).build();\n        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n              .thenApply(HttpResponse::body)\n              .thenAccept(System.out::println);\n    }\n}",
-    "relevant_docs": [
-      "import java.net.http.HttpClient;\nimport java.net.http.HttpRequest;\nimport java.net.http.HttpResponse;\nimport java.net.URI;\n\npublic class APIClient {\n    public static void main(String[] args) throws Exception {\n        HttpClient client = HttpClient.newHttpClient();\n        HttpRequest request = HttpRequest.newBuilder()\n            .uri(new URI(\"https://api.example.com/data\"))\n            .build();\n\n        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n            .thenApply(HttpResponse::body)\n            .thenAccept(System.out::println)\n            .join();\n    }\n}",
-      "HttpClient client = HttpClient.newHttpClient();\nHttpRequest request = HttpRequest.newBuilder()\n    .uri(URI.create(\"https://api.example.com/data\"))\n    .build();\nclient.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n      .thenApply(HttpResponse::body)\n      .thenAccept(System.out::println)\n      .join();",
-      "public void fetchData() throws Exception {\n    HttpClient client = HttpClient.newHttpClient();\n    HttpRequest request = HttpRequest.newBuilder()\n        .uri(new URI(\"https://api.example.com/data\"))\n        .GET()\n        .build();\n    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())\n          .thenApply(HttpResponse::body)\n          .thenAccept(System.out::println)\n          .join();\n}"
     ]
   },
   {
